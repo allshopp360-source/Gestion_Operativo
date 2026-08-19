@@ -214,6 +214,9 @@ main{padding:22px 24px 60px;max-width:1320px;margin:0 auto;}
 .kpi-card.c-promesa .value{color:var(--danger-deep);}
 .kpi-card.c-contacto{border-left-color:var(--warn);}
 .kpi-card.c-contacto .value{color:var(--warn);}
+.kpi-card.c-premio{border-left-color:var(--ok);}
+.kpi-card.c-premio .value{color:var(--ok);}
+.premio-badge{display:inline-block;font-size:14px;margin-left:6px;}
 
 /* ============================================================
    BARRA DE EFECTIVIDAD
@@ -804,8 +807,12 @@ table.vendor-table{width:100%;border-collapse:collapse;}
 
         <div class="section-title">
           <span class="section-title-left">Morosidad por vendedor <span class="count" id="vendorCount">0</span></span>
-          <button class="btn-export" onclick="exportarAdminResumenExcel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>Exportar Excel</button>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-export" id="btnCerrarPremios" onclick="cerrarPremiosMes()">🏆 Cerrar mes y calcular premios</button>
+            <button class="btn-export" onclick="exportarAdminResumenExcel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>Exportar Excel</button>
+          </div>
         </div>
+        <p class="eff-sub" id="premioInfoText" style="margin:-4px 0 10px;">Premio mensual: operativos con morosidad (monto en mora / cartera total) por debajo de <b id="premioUmbralTxt">5%</b>. El botón "Cerrar mes" guarda una foto de este resumen en la hoja <code>Historial_Premios</code>, con quién calificó.</p>
         <div id="adminTableWrap">
           <div class="loading">Cargando resumen de vendedores...</div>
         </div>
@@ -1031,7 +1038,7 @@ table.vendor-table{width:100%;border-collapse:collapse;}
  * https://script.google.com/macros/s/AKfycbz.../usercontent/exec
  * =====================================================================
  */
-const API_URL = "https://script.google.com/macros/s/AKfycbyr3BEbVUWvVMgrsIh1CnUOVbwpcUqLwIB-VPcWULj6iIddgGYo1jDkaPzUf9YyTcI1/exec";
+const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/usercontent/exec";
 
 /* 
  * NOTA: Este frontend es compatible 100% con:
@@ -1076,6 +1083,10 @@ let ordenActual = 'prioridad';
 
 let adminResumenCache = [];
 let adminClientesCache = [];
+
+// Umbral de morosidad (%) por debajo del cual el operativo califica para
+// el premio mensual. Debe coincidir con UMBRAL_PREMIO_MOROSIDAD en Code.gs.
+const UMBRAL_PREMIO_MOROSIDAD = 5;
 let adminOrdenActual = 'prioridad';
 let adminFiltroEstado = 'todos';
 let vendedorActivo = null;
@@ -1646,6 +1657,7 @@ function exportarAdminResumenExcel(){
         'Monto vencido (Gs.)': Number(v.montoVencido || 0),
         'Saldo total (Gs.)': Number(v.montoPendiente || 0),
         'Morosidad (%)': Number(calc.pct.toFixed(1)),
+        'Premio (<5%)': calc.pct < UMBRAL_PREMIO_MOROSIDAD ? 'Sí' : 'No',
         'Efectividad (%)': pe === null ? '' : Number(pe.toFixed(0)),
         'Promesas incumplidas': v.promesasIncumplidas || 0,
         'Sin contacto crítico': v.sinContactoCritico || 0
@@ -1803,14 +1815,12 @@ function mostrarAdminSetup(){
   pintarBarraEfectividad(null, 0, 0, 'adminEff');
   document.getElementById('adminTableWrap').innerHTML = `
     <div class="setup-card">
-      <h3>Activa el panel de administración con datos reales</h3>
-      <p>El usuario <code>adminego</code> ya puede ingresar, pero tu backend todavía no responde
-      a las acciones <code>adminResumen</code> y <code>adminClientes</code> que arman el
-      comparativo de morosidad por vendedor.</p>
-      <p>Copia el código del archivo <code>negofin-admin-backend.gs</code> (te lo dejamos junto a
-      este archivo) dentro de tu proyecto de Apps Script y vuelve a publicar la implementación web.</p>
-      <p>Ese archivo también incluye el hash de contraseña listo para agregar el usuario
-      <code>adminego</code> a tu hoja de Usuarios, para que el acceso quede validado en el servidor.</p>
+      <h3>No se pudo cargar el resumen de vendedores</h3>
+      <p>Revisá que el <code>Code.gs</code> publicado en Apps Script sea la versión más reciente
+      (con las acciones <code>adminResumen</code>, <code>adminClientes</code>,
+      <code>cerrarPremiosMes</code> y <code>historialPremios</code>), que la implementación web
+      esté publicada con esa versión, y que la hoja <code>Vendedores</code> tenga usuarios con
+      <code>rol = vendedor</code>.</p>
     </div>`;
 }
 
@@ -1827,6 +1837,8 @@ function renderAdminResumen(){
     return a;
   }, { totalClientes:0, cuotasVencidas:0, cuotasPendientes:0, montoVencido:0, montoPendiente:0, promesasIncumplidas:0, promesasCumplidas:0, sinContactoCritico:0 });
 
+  const ganadoresPremio = adminResumenCache.filter(v => calcularMorosidad(v).pct < UMBRAL_PREMIO_MOROSIDAD).length;
+
   const cardsData = [
     { cls:'c-clients', ic:'👥', label:'Clientes totales', value: totales.totalClientes },
     { cls:'c-overdue', ic:'🔴', label:'Cuotas vencidas', value: totales.cuotasVencidas },
@@ -1834,6 +1846,7 @@ function renderAdminResumen(){
     { cls:'c-soon', ic:'🧑‍💼', label:'Vendedores activos', value: adminResumenCache.length },
     { cls:'c-promesa', ic:'✋', label:'Promesas incumplidas', value: totales.promesasIncumplidas },
     { cls:'c-contacto', ic:'📵', label:'Sin contacto crítico', value: totales.sinContactoCritico },
+    { cls:'c-premio', ic:'🏆', label:`Con premio (<${UMBRAL_PREMIO_MOROSIDAD}%)`, value: ganadoresPremio },
   ];
   document.getElementById('adminKpiGrid').innerHTML = cardsData.map(c => `
     <div class="kpi-card ${c.cls}"><div class="label"><span class="ic">${c.ic}</span>${c.label}</div><div class="value">${c.value}</div></div>`).join('');
@@ -1866,7 +1879,7 @@ function renderAdminResumen(){
         <tbody>
           ${filas.map((f, i) => `
             <tr onclick="verCarteraVendedor('${f.v.usuario}')">
-              <td><span class="vendor-rank ${i<3 && f.calc.pct>=8 ? 'hot':''}">${i+1}</span>${escapeHtml(f.v.nombre || f.v.usuario)}</td>
+              <td><span class="vendor-rank ${i<3 && f.calc.pct>=8 ? 'hot':''}">${i+1}</span>${escapeHtml(f.v.nombre || f.v.usuario)}${f.calc.pct < UMBRAL_PREMIO_MOROSIDAD ? `<span class="premio-badge" title="Califica al premio mensual (morosidad < ${UMBRAL_PREMIO_MOROSIDAD}%)">🏆</span>` : ''}</td>
               <td class="mono">${f.v.totalClientes || 0}</td>
               <td class="mono">${f.v.cuotasVencidas || 0}</td>
               <td class="mono">${fmtMoney(f.v.montoVencido || 0)}</td>
@@ -1886,6 +1899,32 @@ function renderAdminResumen(){
         </tbody>
       </table>
     </div>`;
+}
+
+/* Cierra el mes: le pide al backend que guarde una foto del resumen actual
+ * (morosidad por monto, por vendedor) en la hoja Historial_Premios, con
+ * quién calificó al premio (< UMBRAL_PREMIO_MOROSIDAD%). Se puede correr
+ * más de una vez; cada corrida agrega una fila nueva con su propia fecha
+ * de cierre, así queda trazable cuándo se calculó. */
+async function cerrarPremiosMes(){
+  const btn = document.getElementById('btnCerrarPremios');
+  const periodo = new Date().toISOString().slice(0,7); // 'YYYY-MM'
+  if(!confirm(`¿Cerrar el mes ${periodo} y guardar quién califica al premio (morosidad < ${UMBRAL_PREMIO_MOROSIDAD}%)?\n\nEsto no borra ni cambia datos de clientes, solo guarda una foto del resumen actual en la hoja Historial_Premios.`)) return;
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+  try{
+    const resp = await apiPost('cerrarPremiosMes', { usuario: session.usuario, periodo });
+    if(resp.ok){
+      showToast(`Cierre de ${periodo} guardado: ${resp.ganadores} de ${resp.totalVendedores} operativos con premio.`);
+    } else {
+      showToast(resp.error || 'No se pudo guardar el cierre de premios');
+    }
+  } catch(e){
+    showToast('No se pudo guardar el cierre de premios');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🏆 Cerrar mes y calcular premios';
+  }
 }
 
 async function verCarteraVendedor(usuarioVendedor){
