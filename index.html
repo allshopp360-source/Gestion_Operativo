@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -241,7 +241,7 @@ main{padding:22px 24px 60px;max-width:1320px;margin:0 auto;}
 /* ============================================================
    WORKBENCH: Mi cola de trabajo / Información del cliente / Historial
    ============================================================ */
-.workbench{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:start;}
+.workbench{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:16px;align-items:start;}
 @media(max-width:1180px){.workbench{grid-template-columns:1fr;}}
 .wb-col{display:flex;flex-direction:column;gap:14px;position:sticky;top:78px;}
 @media(max-width:1180px){.wb-col{position:static;}}
@@ -264,24 +264,23 @@ main{padding:22px 24px 60px;max-width:1320px;margin:0 auto;}
 .mini-stat b{font-size:13.5px;}
 
 /* Lista compacta de la cola de trabajo */
-.wb-queue-list{padding:14px;max-height:calc(100vh - 420px);min-height:260px;overflow-y:auto;}
+.wb-queue-list{padding:14px;max-height:calc(100vh - 300px);min-height:460px;overflow-y:auto;}
 .list-toolbar.compact{flex-direction:column;align-items:stretch;margin-bottom:10px;}
 .list-toolbar.compact input[type="text"]{flex-basis:auto;}
 .list-toolbar.compact .chip-group{gap:6px;}
 .list-toolbar.compact .chip{padding:6px 10px;font-size:11px;}
-.wb-queue-list .client-list{gap:7px;}
+.wb-queue-list .client-list{gap:9px;}
 .wb-queue-list .client-row{border-radius:10px;}
 .wb-queue-list .client-row.selected{border-color:var(--brand);box-shadow:0 0 0 2px rgba(0,192,128,.18);}
-.wb-queue-list .row-body{padding:10px 12px;gap:8px;}
-.wb-queue-list .row-name{font-size:13px;}
-.wb-queue-list .row-sub, .wb-queue-list .row-sub2, .wb-queue-list .tramo-badge{display:none;}
-.wb-queue-list .row-stats .stat:not(:last-child){display:none;}
+.wb-queue-list .row-body{padding:13px 15px;gap:10px;}
+.wb-queue-list .row-name{font-size:14.5px;}
+.wb-queue-list .row-sub2, .wb-queue-list .tramo-badge{display:none;}
 .wb-queue-list .row-stats .stat-label{display:none;}
-.wb-queue-list .row-stats .stat b{font-size:12px;}
-.wb-queue-list .btn-whatsapp{padding:6px;border-radius:50%;}
+.wb-queue-list .row-stats .stat b{font-size:13.5px;}
+.wb-queue-list .btn-whatsapp{padding:7px;border-radius:50%;}
 .wb-queue-list .btn-whatsapp span{display:none;}
-.wb-queue-list .btn-whatsapp svg{width:13px;height:13px;}
-.wb-queue-list .row-rank{width:20px;height:20px;font-size:10px;}
+.wb-queue-list .btn-whatsapp svg{width:15px;height:15px;}
+.wb-queue-list .row-rank{width:22px;height:22px;font-size:11px;}
 
 /* Columna 2: información del cliente */
 .wb-detail-card{min-height:360px;}
@@ -637,7 +636,7 @@ table.vendor-table{width:100%;border-collapse:collapse;}
         <div class="wb-col wb-queue">
           <div class="wb-card wb-progress">
             <div class="wb-col-header">
-              <h3>Mi Cola de Trabajo</h3>
+              <h3>Mi Tasa de Morosidad</h3>
               <button class="btn-assign">Asignmente <span>›</span></button>
             </div>
             <div class="gauge lg">
@@ -650,7 +649,7 @@ table.vendor-table{width:100%;border-collapse:collapse;}
             </div>
             <p class="progress-caption" id="queueCaption">Cargando indicadores...</p>
             <div class="mini-stat-row">
-              <span class="mini-stat">Morosidad de tu cartera <b id="miniMorosidad" class="mono">—</b></span>
+              <span class="mini-stat">Clientes por contactar hoy <b id="miniPendientesHoy" class="mono">—</b></span>
             </div>
           </div>
 
@@ -660,7 +659,7 @@ table.vendor-table{width:100%;border-collapse:collapse;}
               <select class="sort-select" id="ordenSelect">
                 <option value="prioridad" selected>Prioridad de cobranza</option>
                 <option value="antiguedad">Mora más antigua</option>
-                <option value="monto">Mayor monto vencido</option>
+                <option value="cuotas">Más cuotas vencidas</option>
                 <option value="contacto">Más días sin contacto</option>
                 <option value="nombre">Nombre (A–Z)</option>
               </select>
@@ -697,7 +696,7 @@ table.vendor-table{width:100%;border-collapse:collapse;}
               </div>
               <div class="modal-seguimiento" id="wbSeguimiento"></div>
               <div class="wb-stats-row">
-                <div class="wb-stat"><span>Total deudor</span><b id="wbTotalDeuda" class="mono">—</b></div>
+                <div class="wb-stat"><span>Cuotas adeudadas</span><b id="wbTotalDeuda" class="mono">—</b></div>
                 <div class="wb-stat"><span>Días de atraso</span><b id="wbDiasAtraso" class="mono">—</b></div>
               </div>
               <div class="wb-chart" id="wbChart"></div>
@@ -842,7 +841,7 @@ table.vendor-table{width:100%;border-collapse:collapse;}
             <option value="prioridad" selected>Prioridad de cobranza</option>
             <option value="antiguedad">Mora más antigua</option>
             <option value="contacto">Más días sin contacto</option>
-            <option value="monto">Mayor monto vencido</option>
+            <option value="cuotas">Más cuotas vencidas</option>
             <option value="nombre">Nombre (A–Z)</option>
           </select>
         </div>
@@ -1038,7 +1037,7 @@ table.vendor-table{width:100%;border-collapse:collapse;}
  * https://script.google.com/macros/s/AKfycbz.../usercontent/exec
  * =====================================================================
  */
-const API_URL = "https://script.google.com/macros/s/AKfycbw5CG1Wo9RJWXfiSnNzAGMzCgozwA4RAIITt21-KN2f8XHwu0LDg3DuTKbSyVk8bwt-Mg/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxqfSaLCFw26PfJE3sbELC6ksfkra5Ko279hdTL_wMM1K1ZEKTtE_1e5rNcRZsTKjf-/exec";
 
 /* 
  * NOTA: Este frontend es compatible 100% con:
@@ -1063,8 +1062,6 @@ const API_URL = "https://script.google.com/macros/s/AKfycbw5CG1Wo9RJWXfiSnNzAGMz
  * aproximados y te avisa con una etiqueta "Sin fecha"):
  *   diasAtraso            -> días de atraso de la cuota más antigua
  *   fechaVencidaMasAntigua-> 'YYYY-MM-DD' (si no viene diasAtraso)
- *   montoVencido           -> Gs. en mora
- *   montoPendiente         -> Gs. total pendiente (vencido + al día)
  *   vendedor                -> nombre del vendedor (usado en panel admin)
  *   diasSinContacto         -> días desde la última interacción (null = nunca)
  *   fechaUltimoContacto     -> 'YYYY-MM-DD' de la última interacción
@@ -1112,12 +1109,10 @@ async function sha256(text){
  * apiPost - Llama al backend (Code.gs) con la nueva estructura relacional
  * 
  * Acciones soportadas:
- * • 'login' → { usuario, passwordHash } → { ok, usuario, nombre, rol }
- * • 'dashboard' → { usuario } → { ok, kpis, detalle }
+ * • 'login' → { usuario, passwordHash } → { ok, usuario, nombre, marca, tasaMorosidad, rol }
  * • 'clientes' → { usuario } → { ok, clientes[] }
- * • 'cliente' → { idCliente } → { ok, cliente, creditos[], interacciones[], seguimiento }
+ * • 'cliente' → { idCliente } → { ok, cliente, credito, interacciones[], seguimiento }
  * • 'addInteraccion' → { idCliente, tipo, detalle, fechaPromesa, montoPromesa, motivo } → { ok }
- * • 'marcarPagada' → { idCuota, fechaPago } → { ok }
  * • 'adminResumen' → {} → { ok, resumen }
  * • 'adminClientes' → { filtro? } → { ok, clientes[] }
  */
@@ -1240,19 +1235,20 @@ function promesaInfoDe(promesa){
 }
 
 /* ---------------------------------------------------------------------
- * PRIORIDAD DE COBRANZA: combina antigüedad de mora, monto vencido y
- * urgencia de seguimiento (promesa incumplida / sin contacto) en un
- * único puntaje para ordenar la cartera por lo que más impacta, en vez
- * de solo por antigüedad. Fórmula simple y transparente:
+ * PRIORIDAD DE COBRANZA: combina antigüedad de mora, cantidad de cuotas
+ * vencidas y urgencia de seguimiento (promesa incumplida / sin contacto)
+ * en un único puntaje para ordenar la cartera por lo que más impacta, en
+ * vez de solo por antigüedad. Ya no se usa monto (solo cantidad de
+ * cuotas). Fórmula simple y transparente:
  *   score = díasAtraso*1000  (la antigüedad manda)
- *         + montoVencido/10000  (aporte del monto en riesgo)
+ *         + cuotasVencidas*200  (cuantas más cuotas debe, más urgente)
  *         + 5000 si la promesa más reciente está incumplida
  *         + 3000 si el cliente en mora no tiene contacto reciente
  * ------------------------------------------------------------------- */
 function prioridadScoreDe(c){
   const dias = diasAtrasoDe(c) || 0;
-  const monto = Number(c.montoVencido || 0);
-  let score = dias * 1000 + monto / 10000;
+  const cuotasVencidas = Number(c.cuotasVencidas || 0);
+  let score = dias * 1000 + cuotasVencidas * 200;
   if(c.promesa && c.promesa.estado === 'incumplida') score += 5000;
   if(c.cuotasVencidas > 0 && (c.diasSinContacto == null || c.diasSinContacto >= DIAS_SIN_CONTACTO_ALERTA)) score += 3000;
   return score;
@@ -1287,22 +1283,28 @@ function tramoMoraDe(dias){
 /**
  * Construye el mensaje de cobranza en base a los datos dinámicos del
  * cliente en mora y del vendedor/usuario en sesión. Recibe un objeto
- * normalizado: { nombre, cuotasVencidas, montoVencido, fechaVencidaMasAntigua }
+ * normalizado: { nombre, cuotasVencidas, fechaVencidaMasAntigua }
  */
 function construirMensajeCobranza(datos){
   const cliente_nombre = datos.nombre || 'cliente';
-  const vendedor_nombre = (session && session.nombre) ? session.nombre : 'Negofin';
+  const marca_nombre = (session && session.nombreMarca) ? session.nombreMarca : 'Negofin';
   const cuotas_vencidas = Number(datos.cuotasVencidas) || 0;
   const fecha_vencimiento = fmtFechaDDMMYYYY(datos.fechaVencidaMasAntigua) || 'a la brevedad';
-  const monto_total = (Number(datos.montoVencido) || 0).toLocaleString('es-PY');
 
-  return `Hola, ${cliente_nombre}. Le saluda ${vendedor_nombre} de la empresa Negofin. ` +
+  return `Hola, ${cliente_nombre}. Le saluda el equipo de ${marca_nombre}. ` +
     `Le comunicamos que actualmente cuenta con ${cuotas_vencidas} cuota${cuotas_vencidas === 1 ? '' : 's'} vencida${cuotas_vencidas === 1 ? '' : 's'} ` +
-    `(la más antigua el ${fecha_vencimiento}) por un monto total de Gs. ${monto_total}. ` +
+    `(la más antigua con vencimiento el ${fecha_vencimiento}). ` +
     `Favor comunicarse lo antes posible para regularizar su situación y evitar inconvenientes con su historial crediticio. Muchas gracias.`;
 }
 
-/** Abre la conversación de WhatsApp con el mensaje ya armado */
+/**
+ * Abre la conversación de WhatsApp con el mensaje ya armado. Al volver a la
+ * pestaña, pregunta si el mensaje se llegó a enviar y, solo si el vendedor
+ * confirma que sí, registra automáticamente una interacción de tipo
+ * "WhatsApp" en la hoja Interacciones (vía addInteraccion), con el mismo
+ * texto que se envió. `datos` necesita además `idCliente` para poder
+ * registrar la interacción.
+ */
 function abrirWhatsAppCobranza(datos){
   const telefono = formatearTelefonoPY(datos.telefono);
   if(!telefono){
@@ -1312,6 +1314,47 @@ function abrirWhatsAppCobranza(datos){
   const mensaje = construirMensajeCobranza(datos);
   const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
   window.open(url, '_blank', 'noopener');
+
+  if(!datos.idCliente) return;
+
+  // Al volver de WhatsApp (el usuario cambia de pestaña/app y regresa),
+  // preguntamos si el mensaje se envió antes de registrar la interacción.
+  // Se quita cualquier listener pendiente de un clic anterior para evitar
+  // que se acumulen preguntas si el vendedor hace varios envíos seguidos.
+  if(window._preguntarEnvioWhatsApp){
+    window.removeEventListener('focus', window._preguntarEnvioWhatsApp);
+  }
+  const preguntar = () => {
+    window.removeEventListener('focus', preguntar);
+    window._preguntarEnvioWhatsApp = null;
+    const confirmado = confirm('¿Enviaste el mensaje de cobranza por WhatsApp?\n\nSi confirmás, se registrará automáticamente como una interacción.');
+    if(!confirmado) return;
+
+    apiPost('addInteraccion', {
+      idCliente: datos.idCliente,
+      usuario: session.usuario,
+      tipo: 'WhatsApp',
+      detalle: mensaje,
+      fechaPromesa: '',
+      montoPromesa: '',
+      motivo: ''
+    }).then(resp => {
+      if(resp.ok){
+        showToast('Interacción de WhatsApp registrada');
+        if(clienteActivoId === datos.idCliente){
+          abrirCliente(clienteActivoId);
+        }
+      } else {
+        console.error('No se pudo registrar la interacción de WhatsApp', resp.error);
+        showToast('No se pudo registrar la interacción');
+      }
+    }).catch(err => {
+      console.error('Error registrando interacción de WhatsApp', err);
+      showToast('No se pudo registrar la interacción');
+    });
+  };
+  window._preguntarEnvioWhatsApp = preguntar;
+  window.addEventListener('focus', preguntar);
 }
 
 /* Botón de la tarjeta de cliente (lista de vendedor o admin) */
@@ -1319,10 +1362,10 @@ function enviarCobranzaWhatsApp(idCliente){
   const c = clientesIndexados[String(idCliente)];
   if(!c){ showToast('No se encontraron datos del cliente'); return; }
   abrirWhatsAppCobranza({
+    idCliente: idCliente,
     nombre: c.nombre,
     telefono: c.telefono,
     cuotasVencidas: c.cuotasVencidas,
-    montoVencido: c.montoVencido,
     fechaVencidaMasAntigua: c.fechaVencidaMasAntigua
   });
 }
@@ -1331,7 +1374,7 @@ function enviarCobranzaWhatsApp(idCliente){
 let clienteActivoStats = null;
 function enviarCobranzaWhatsAppModal(){
   if(!clienteActivoStats){ showToast('Todavía se están cargando los datos del cliente'); return; }
-  abrirWhatsAppCobranza(clienteActivoStats);
+  abrirWhatsAppCobranza({ idCliente: clienteActivoId, ...clienteActivoStats });
 }
 
 function heatClassDe(dias){
@@ -1348,14 +1391,9 @@ function fmtAging(dias){
   return dias + (dias === 1 ? ' día' : ' días');
 }
 
-/* Cálculo unificado de la tasa de morosidad.
-   Prioriza el cálculo por MONTO (más preciso financieramente);
-   si no hay montos disponibles, usa el cálculo por CANTIDAD DE CUOTAS
-   (vencidas / total de cuotas pendientes+vencidas). */
-function calcularMorosidad({ cuotasVencidas = 0, cuotasPendientes = 0, montoVencido = null, montoPendiente = null }){
-  if(typeof montoPendiente === 'number' && montoPendiente > 0){
-    return { pct: Math.min(100, (Number(montoVencido || 0) / montoPendiente) * 100), metodo: 'monto' };
-  }
+/* Cálculo unificado de la tasa de morosidad, por CANTIDAD DE CUOTAS:
+   vencidas / (vencidas + pendientes). Ya no se usa monto en ningún lado. */
+function calcularMorosidad({ cuotasVencidas = 0, cuotasPendientes = 0 }){
   const totalCuotas = (cuotasPendientes || 0) + (cuotasVencidas || 0);
   if(totalCuotas > 0){
     return { pct: Math.min(100, (cuotasVencidas / totalCuotas) * 100), metodo: 'cuotas' };
@@ -1367,8 +1405,25 @@ function colorParaPct(pct){
   return pct >= 20 ? 'var(--danger)' : pct >= 8 ? 'var(--warn)' : 'var(--ok)';
 }
 
+/* Color para la TASA DE MOROSIDAD MANUAL (cargada a mano en Usuarios_PD,
+ * columna "tasa_morosidad"), que define si el operativo gana su comisión:
+ *   <= 5%  -> verde (gana comisión)
+ *   6-7%   -> amarillo (cerca del límite)
+ *   >= 8%  -> rojo (no gana comisión) */
+const UMBRAL_MOROSIDAD_VERDE = 5;
+const UMBRAL_MOROSIDAD_ROJO = 8;
+function colorParaTasaManual(pct){
+  if(pct <= UMBRAL_MOROSIDAD_VERDE) return 'var(--ok)';
+  if(pct >= UMBRAL_MOROSIDAD_ROJO) return 'var(--danger)';
+  return 'var(--warn)';
+}
+function textoTasaManual(pct){
+  if(pct <= UMBRAL_MOROSIDAD_VERDE) return `Dentro del objetivo (≤${UMBRAL_MOROSIDAD_VERDE}%) — ganás tu comisión`;
+  if(pct >= UMBRAL_MOROSIDAD_ROJO) return `Por encima del objetivo (≥${UMBRAL_MOROSIDAD_ROJO}%) — no calificás a la comisión este mes`;
+  return `Cerca del límite — necesitás bajar a ${UMBRAL_MOROSIDAD_VERDE}% o menos para ganar tu comisión`;
+}
+
 function textoFormula(metodo){
-  if(metodo === 'monto') return 'Cálculo: monto vencido ÷ monto total pendiente × 100';
   if(metodo === 'cuotas') return 'Cálculo: cuotas vencidas ÷ (cuotas vencidas + al día) × 100';
   return 'Sin cuotas pendientes registradas todavía';
 }
@@ -1379,6 +1434,17 @@ function pintarGauge(pct, arcId, valueId){
   const arc = document.getElementById(arcId);
   arc.setAttribute('stroke-dashoffset', offset);
   arc.setAttribute('stroke', colorParaPct(pct));
+  document.getElementById(valueId).textContent = pct.toFixed(1) + '%';
+}
+
+/* Igual que pintarGauge, pero coloreado con los umbrales de comisión
+ * (5% / 8%) en vez de los umbrales generales de morosidad. */
+function pintarGaugeTasaManual(pct, arcId, valueId){
+  const circumference = 326.7;
+  const offset = circumference - (Math.max(0, Math.min(100, pct)) / 100) * circumference;
+  const arc = document.getElementById(arcId);
+  arc.setAttribute('stroke-dashoffset', offset);
+  arc.setAttribute('stroke', colorParaTasaManual(pct));
   document.getElementById(valueId).textContent = pct.toFixed(1) + '%';
 }
 
@@ -1461,7 +1527,7 @@ async function doLogin(){
       errBox.textContent = resp.error || 'Credenciales incorrectas.';
       errBox.style.display = 'block';
     } else {
-      session = { usuario: resp.usuario, nombre: resp.nombre, rol: resp.rol === 'admin' ? 'admin' : 'vendedor' };
+      session = { usuario: resp.usuario, nombre: resp.nombre, nombreMarca: resp.marca, tasaMorosidad: resp.tasaMorosidad, rol: resp.rol === 'admin' ? 'admin' : 'vendedor' };
       if(session.rol === 'admin') entrarComoAdmin();
       else entrarComoVendedor();
     }
@@ -1509,34 +1575,29 @@ document.getElementById('btnLogout').addEventListener('click', () => {
 
 /* ---------- DASHBOARD VENDEDOR ---------- */
 async function cargarDashboard(){
-  let k = null;
-  try{
-    const resp = await apiPost('dashboard', { usuario: session.usuario });
-    if(resp.ok) k = resp.kpis;
-  } catch(e){ /* seguimos con datos calculados localmente */ }
+  // La tasa de morosidad del gauge NO se calcula acá: la carga el admin a
+  // mano en Usuarios_PD (columna "tasa_morosidad") y llega ya en la sesión
+  // (session.tasaMorosidad), seteada al hacer login.
+  const tasaManual = (session && session.tasaMorosidad !== null && session.tasaMorosidad !== undefined && session.tasaMorosidad !== '')
+    ? Number(session.tasaMorosidad)
+    : null;
 
-  // Totales calculados a partir de la cartera real cargada (fuente de verdad),
-  // así el indicador de morosidad siempre coincide con la lista de clientes.
-  const agg = clientesCache.reduce((a,c) => {
-    a.cuotasVencidas += c.cuotasVencidas || 0;
-    a.cuotasPendientes += c.cuotasPendientes || 0;
-    a.montoVencido += Number(c.montoVencido || 0);
-    a.montoPendiente += Number(c.montoPendiente || 0);
-    return a;
-  }, { cuotasVencidas:0, cuotasPendientes:0, montoVencido:0, montoPendiente:0 });
+  if(tasaManual === null || isNaN(tasaManual)){
+    document.getElementById('queueGaugeValue').textContent = '—';
+    document.getElementById('queueCaption').textContent = 'Tu supervisor todavía no cargó tu tasa de morosidad de este mes.';
+    document.getElementById('queueGaugeArc').setAttribute('stroke', 'var(--border)');
+  } else {
+    pintarGaugeTasaManual(tasaManual, 'queueGaugeArc', 'queueGaugeValue');
+    document.getElementById('queueCaption').textContent = textoTasaManual(tasaManual);
+  }
 
-  // Donut de "Mi cola de trabajo": efectividad (cumplimiento de promesas de pago)
-  const cumplidas = k ? (k.promesasCumplidas || 0) : 0;
-  const incumplidas = k ? (k.promesasIncumplidas || 0) : 0;
-  const pctEfectividad = k ? calcularEfectividad(cumplidas, incumplidas) : null;
-  pintarGaugeEfectividad(pctEfectividad, 'queueGaugeArc', 'queueGaugeValue');
-  document.getElementById('queueCaption').textContent = pctEfectividad === null
-    ? 'Todavía no hay promesas de pago cumplidas o incumplidas para calcular tu efectividad.'
-    : `${cumplidas} de ${cumplidas + incumplidas} promesas cumplidas`;
-
-  const { pct, metodo } = calcularMorosidad(agg);
-  document.getElementById('miniMorosidad').textContent = pct.toFixed(0) + '%';
-  document.getElementById('miniMorosidad').style.color = colorParaPct(pct);
+  // "Clientes por contactar hoy" = clientes de la cartera que todavía no
+  // tienen un contacto registrado hoy (mismo criterio que el badge
+  // "Contactado hoy" de cada tarjeta de cliente).
+  const totalClientes = clientesCache.length;
+  const contactadosHoy = clientesCache.filter(c => (c.diasSinContacto ?? null) === 0).length;
+  const pendientesHoy = totalClientes - contactadosHoy;
+  document.getElementById('miniPendientesHoy').textContent = `${pendientesHoy} de ${totalClientes}`;
 }
 
 /* ---------- CLIENTES (vendedor) ---------- */
@@ -1551,8 +1612,8 @@ function ordenarLista(lista, criterio){
   const conDias = lista.map(c => ({ c, dias: diasAtrasoDe(c) }));
   if(criterio === 'nombre'){
     conDias.sort((a,b) => a.c.nombre.localeCompare(b.c.nombre));
-  } else if(criterio === 'monto'){
-    conDias.sort((a,b) => Number(b.c.montoVencido || 0) - Number(a.c.montoVencido || 0) || (b.dias ?? -1) - (a.dias ?? -1));
+  } else if(criterio === 'cuotas'){
+    conDias.sort((a,b) => Number(b.c.cuotasVencidas || 0) - Number(a.c.cuotasVencidas || 0) || (b.dias ?? -1) - (a.dias ?? -1));
   } else if(criterio === 'contacto'){
     conDias.sort((a,b) => {
       const da = a.c.diasSinContacto == null ? Infinity : a.c.diasSinContacto;
@@ -1588,6 +1649,17 @@ function exportarExcel(filas, nombreArchivo, nombreHoja){
 
 function fechaHoyISO(){ return new Date().toISOString().slice(0,10); }
 
+/* Devuelve la fecha de HOY en formato 'YYYY-MM-DD' usando la hora LOCAL
+   del dispositivo (no UTC), para evitar que toISOString() adelante o
+   atrase el día según la zona horaria y genere atrasos incorrectos. */
+function fechaLocalHoyISO(){
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 function estadoLabelDe(estado){
   return estado === 'vencido' ? 'Vencido' : estado === 'al_dia' ? 'Al día' : 'Sin saldo';
 }
@@ -1601,8 +1673,6 @@ function filaClienteExport(c){
     'Tramo de mora': tramoMoraDe(dias).label,
     'Cuotas vencidas': c.cuotasVencidas || 0,
     'Cuotas al día': c.cuotasPendientes || 0,
-    'Monto vencido (Gs.)': Number(c.montoVencido || 0),
-    'Saldo total (Gs.)': Number(c.montoPendiente || 0),
     'Días de atraso': dias ?? '',
     'Días sin contacto': c.diasSinContacto ?? '',
     'Estado de promesa': c.promesa ? c.promesa.estado : '',
@@ -1654,8 +1724,7 @@ function exportarAdminResumenExcel(){
         'Vendedor': v.nombre || v.usuario,
         'Clientes': v.totalClientes || 0,
         'Cuotas vencidas': v.cuotasVencidas || 0,
-        'Monto vencido (Gs.)': Number(v.montoVencido || 0),
-        'Saldo total (Gs.)': Number(v.montoPendiente || 0),
+        'Cuotas pendientes': v.cuotasPendientes || 0,
         'Morosidad (%)': Number(calc.pct.toFixed(1)),
         'Premio (<5%)': calc.pct < UMBRAL_PREMIO_MOROSIDAD ? 'Sí' : 'No',
         'Efectividad (%)': pe === null ? '' : Number(pe.toFixed(0)),
@@ -1734,10 +1803,10 @@ function renderClientRows(container, lista, opts){
           ${escalar ? `<span class="escalate-badge">Escalar (${dias}d)</span>` : ''}
         </div>`
       : '';
-    const montoStat = (typeof c.montoVencido === 'number')
-      ? `<div class="stat"><span class="stat-label">Monto vencido</span><b class="mono danger-text">${fmtMoney(c.montoVencido)}</b></div>` : '';
-    const saldoStat = (typeof c.montoPendiente === 'number')
-      ? `<div class="stat"><span class="stat-label">Saldo total</span><b class="mono">${fmtMoney(c.montoPendiente)}</b></div>` : '';
+    const montoStat = (typeof c.cuotasVencidas === 'number')
+      ? `<div class="stat"><span class="stat-label">Cuotas vencidas</span><b class="mono danger-text">${c.cuotasVencidas}</b></div>` : '';
+    const saldoStat = (typeof c.cuotasPendientes === 'number')
+      ? `<div class="stat"><span class="stat-label">Cuotas pendientes</span><b class="mono">${c.cuotasPendientes}</b></div>` : '';
     const whatsappBtn = (dias != null && dias > 0)
       ? `<button class="btn-whatsapp" onclick="event.stopPropagation(); enviarCobranzaWhatsApp('${c.id}')" title="Enviar recordatorio de cobranza por WhatsApp">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.33 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.5 0 9.96-4.46 9.96-9.96S17.54 2 12.04 2zm5.85 14.1c-.25.7-1.45 1.33-1.99 1.4-.51.07-1.13.1-1.82-.12-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.8-4.16-4.94-4.35-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36h.55c.18 0 .41-.02.64.5.25.56.83 1.94.9 2.08.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.16-.29.36-.42.49-.14.14-.28.29-.12.56.16.28.71 1.18 1.53 1.92 1.05.94 1.94 1.24 2.21 1.38.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.18-.28.36-.23.6-.14.25.09 1.58.75 1.85.88.28.14.46.2.53.32.07.12.07.7-.18 1.4z"/></svg>
@@ -1829,20 +1898,18 @@ function renderAdminResumen(){
     a.totalClientes += v.totalClientes || 0;
     a.cuotasVencidas += v.cuotasVencidas || 0;
     a.cuotasPendientes += v.cuotasPendientes || 0;
-    a.montoVencido += Number(v.montoVencido || 0);
-    a.montoPendiente += Number(v.montoPendiente || 0);
     a.promesasIncumplidas += Number(v.promesasIncumplidas || 0);
     a.promesasCumplidas += Number(v.promesasCumplidas || 0);
     a.sinContactoCritico += Number(v.sinContactoCritico || 0);
     return a;
-  }, { totalClientes:0, cuotasVencidas:0, cuotasPendientes:0, montoVencido:0, montoPendiente:0, promesasIncumplidas:0, promesasCumplidas:0, sinContactoCritico:0 });
+  }, { totalClientes:0, cuotasVencidas:0, cuotasPendientes:0, promesasIncumplidas:0, promesasCumplidas:0, sinContactoCritico:0 });
 
   const ganadoresPremio = adminResumenCache.filter(v => calcularMorosidad(v).pct < UMBRAL_PREMIO_MOROSIDAD).length;
 
   const cardsData = [
     { cls:'c-clients', ic:'👥', label:'Clientes totales', value: totales.totalClientes },
     { cls:'c-overdue', ic:'🔴', label:'Cuotas vencidas', value: totales.cuotasVencidas },
-    { cls:'c-today', ic:'💰', label:'Monto vencido', value: fmtMoney(totales.montoVencido) },
+    { cls:'c-today', ic:'🧾', label:'Cuotas pendientes', value: totales.cuotasPendientes },
     { cls:'c-soon', ic:'🧑‍💼', label:'Vendedores activos', value: adminResumenCache.length },
     { cls:'c-promesa', ic:'✋', label:'Promesas incumplidas', value: totales.promesasIncumplidas },
     { cls:'c-contacto', ic:'📵', label:'Sin contacto crítico', value: totales.sinContactoCritico },
@@ -1873,7 +1940,7 @@ function renderAdminResumen(){
       <table class="vendor-table">
         <thead>
           <tr>
-            <th>Vendedor</th><th>Clientes</th><th>Cuotas vencidas</th><th>Monto vencido</th><th>Morosidad</th><th>Efectividad</th><th>Promesas incump.</th><th>Sin contacto</th><th></th>
+            <th>Vendedor</th><th>Clientes</th><th>Cuotas vencidas</th><th>Cuotas pendientes</th><th>Morosidad</th><th>Efectividad</th><th>Promesas incump.</th><th>Sin contacto</th><th></th>
           </tr>
         </thead>
         <tbody>
@@ -1882,7 +1949,7 @@ function renderAdminResumen(){
               <td><span class="vendor-rank ${i<3 && f.calc.pct>=8 ? 'hot':''}">${i+1}</span>${escapeHtml(f.v.nombre || f.v.usuario)}${f.calc.pct < UMBRAL_PREMIO_MOROSIDAD ? `<span class="premio-badge" title="Califica al premio mensual (morosidad < ${UMBRAL_PREMIO_MOROSIDAD}%)">🏆</span>` : ''}</td>
               <td class="mono">${f.v.totalClientes || 0}</td>
               <td class="mono">${f.v.cuotasVencidas || 0}</td>
-              <td class="mono">${fmtMoney(f.v.montoVencido || 0)}</td>
+              <td class="mono">${f.v.cuotasPendientes || 0}</td>
               <td>
                 <div class="mora-bar-wrap">
                   <div class="mora-bar"><div class="mora-bar-fill" style="width:${Math.min(100,f.calc.pct)}%;background:${colorParaPct(f.calc.pct)};"></div></div>
@@ -2006,35 +2073,27 @@ async function seleccionarCliente(idCliente, abrirModal){
 }
 
 /* Sparkline simple en SVG con el monto de las próximas cuotas (pagadas vs pendientes) */
-function renderMiniChart(creditos){
-  const cuotas = [];
-  creditos.forEach(cr => cr.cuotas.forEach(q => cuotas.push(q)));
-  cuotas.sort((a,b) => (a.fecha_vencimiento || '').localeCompare(b.fecha_vencimiento || ''));
-  const ultimas = cuotas.slice(-10);
-  if(ultimas.length < 2){
-    document.getElementById('wbChart').innerHTML = '<div class="wb-chart-empty">Sin datos suficientes de cuotas para el gráfico.</div>';
+/* Ya no hay cuotas individuales (no existe la hoja Cuotas): en vez de un
+   gráfico de evolución de montos por cuota, se muestra una barra apilada
+   simple con la proporción de cuotas pagadas / vencidas / pendientes del
+   crédito. */
+function renderResumenCuotas(credito){
+  const el = document.getElementById('wbChart');
+  if(!credito || !credito.cantidad_cuotas){
+    el.innerHTML = '<div class="wb-chart-empty">Sin datos de cuotas para este crédito.</div>';
     return;
   }
-  const w = 260, h = 70, pad = 6;
-  const montos = ultimas.map(q => Number(q.monto) || 0);
-  const max = Math.max(...montos, 1), min = Math.min(...montos, 0);
-  const range = (max - min) || 1;
-  const stepX = (w - pad*2) / (ultimas.length - 1);
-  const pts = ultimas.map((q,i) => {
-    const x = pad + i*stepX;
-    const y = h - pad - ((Number(q.monto)||0) - min) / range * (h - pad*2);
-    return { x, y, pagada: q.estado === 'pagada' };
-  });
-  const linePath = pts.map((p,i) => (i===0?'M':'L') + p.x.toFixed(1) + ',' + p.y.toFixed(1)).join(' ');
-  const areaPath = linePath + ` L${pts[pts.length-1].x.toFixed(1)},${h-pad} L${pts[0].x.toFixed(1)},${h-pad} Z`;
-  const dots = pts.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="${p.pagada ? 'var(--ok)' : 'var(--danger)'}"/>`).join('');
-  document.getElementById('wbChart').innerHTML = `
-    <svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" preserveAspectRatio="none">
-      <path d="${areaPath}" fill="var(--brand-soft)" opacity=".6"/>
-      <path d="${linePath}" fill="none" stroke="var(--brand)" stroke-width="2"/>
-      ${dots}
-    </svg>
-    <div class="wb-chart-caption">Evolución de las últimas ${ultimas.length} cuotas · <span style="color:var(--ok);">●</span> pagada <span style="color:var(--danger);">●</span> pendiente/vencida</div>`;
+  const total = credito.cantidad_cuotas;
+  const pctPagadas = (credito.cuotas_pagadas / total) * 100;
+  const pctVencidas = (credito.cuotas_vencidas / total) * 100;
+  const pctPendientes = Math.max(0, 100 - pctPagadas - pctVencidas);
+  el.innerHTML = `
+    <div style="display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--surface-2);">
+      <div style="width:${pctPagadas}%;background:var(--ok);"></div>
+      <div style="width:${pctVencidas}%;background:var(--danger);"></div>
+      <div style="width:${pctPendientes}%;background:var(--border);"></div>
+    </div>
+    <div class="wb-chart-caption">${credito.cuotas_pagadas} pagadas · ${credito.cuotas_vencidas} vencidas · ${credito.cuotas_pendientes} pendientes (de ${total})</div>`;
 }
 
 function iconoInteraccion(tipo){
@@ -2070,71 +2129,48 @@ async function abrirCliente(idCliente){
   })();
   ['modalSeguimiento','wbSeguimiento'].forEach(id => document.getElementById(id).innerHTML = seguimientoHtml);
 
-  // Créditos con sus cuotas agrupadas
-  const hoy = new Date().toISOString().slice(0,10);
+  // Ya no hay hoja Cuotas: el backend ya devuelve el resumen (cantidades)
+  // del crédito directamente en resp.credito, no hace falta recorrer
+  // ninguna lista de cuotas acá.
+  const credito = resp.credito || null;
+  const cuotasVencidasModal = credito ? (credito.cuotas_vencidas || 0) : 0;
+  const fechaMasAntiguaModal = credito ? (credito.fecha_vencida_mas_antigua || null) : null;
 
-  /* Recalcula cuotas vencidas / monto vencido / fecha más antigua a
-     partir del detalle de créditos, para alimentar el botón de
-     cobranza por WhatsApp y las estadísticas del panel del gestor. */
-  let cuotasVencidasModal = 0, montoVencidoModal = 0, fechaMasAntiguaModal = null, montoPendienteTotal = 0;
-  resp.creditos.forEach(cr => {
-    cr.cuotas.forEach(q => {
-      if(q.estado !== 'pagada'){
-        montoPendienteTotal += Number(q.monto) || 0;
-        if(q.fecha_vencimiento < hoy){
-          cuotasVencidasModal++;
-          montoVencidoModal += Number(q.monto) || 0;
-          if(!fechaMasAntiguaModal || q.fecha_vencimiento < fechaMasAntiguaModal){
-            fechaMasAntiguaModal = q.fecha_vencimiento;
-          }
-        }
-      }
-    });
-  });
   clienteActivoStats = {
     nombre: resp.cliente.nombre,
     telefono: resp.cliente.telefono,
     cuotasVencidas: cuotasVencidasModal,
-    montoVencido: montoVencidoModal,
     fechaVencidaMasAntigua: fechaMasAntiguaModal
   };
   const mostrarWhatsapp = cuotasVencidasModal > 0;
   ['btnWhatsappModal','btnWhatsappWb'].forEach(id => document.getElementById(id).style.display = mostrarWhatsapp ? 'inline-flex' : 'none');
 
-  document.getElementById('wbTotalDeuda').textContent = fmtMoney(montoPendienteTotal);
-  const diasAtrasoCliente = fechaMasAntiguaModal ? Math.round((new Date(hoy) - new Date(fechaMasAntiguaModal)) / 86400000) : null;
+  document.getElementById('wbTotalDeuda').textContent = credito
+    ? `${credito.cuotas_vencidas + credito.cuotas_pendientes} de ${credito.cantidad_cuotas}`
+    : '—';
+  const diasAtrasoCliente = fechaMasAntiguaModal ? Math.round((new Date(fechaLocalHoyISO()) - new Date(fechaMasAntiguaModal)) / 86400000) : null;
   const wbDias = document.getElementById('wbDiasAtraso');
   wbDias.textContent = diasAtrasoCliente == null ? 'Al día' : diasAtrasoCliente + ' días';
   wbDias.style.color = diasAtrasoCliente > 0 ? 'var(--danger-deep)' : 'var(--ok)';
 
-  renderMiniChart(resp.creditos);
+  renderResumenCuotas(credito);
 
-  const cuotasHtml = resp.creditos.length ? resp.creditos.map(cr => {
-    const filasCuotas = cr.cuotas.length ? cr.cuotas.map(q => {
-      const vencida = q.estado !== 'pagada' && q.fecha_vencimiento < hoy;
-      const estadoLabel = q.estado === 'pagada' ? 'pagada' : (vencida ? 'vencida' : 'pendiente');
-      return `
-        <div class="cuota-row">
-          <div class="left">Cuota #${q.numero_cuota} · <b>${fmtMoney(q.monto)}</b> · vence ${q.fecha_vencimiento}</div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span class="badge ${estadoLabel}">${estadoLabel}</span>
-            ${q.estado !== 'pagada' ? `<button class="btn-mini" onclick="marcarPagada('${q.id}')">Marcar pagada</button>` : ''}
-          </div>
-        </div>`;
-    }).join('') : '<div class="empty-state" style="padding:12px 0;">Este crédito no tiene cuotas cargadas.</div>';
-
-    return `
-      <div style="margin-bottom:18px;border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-        <div style="background:var(--surface-2);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <div style="font-weight:700;font-size:13px;">Crédito ${cr.id} · ${fmtMoney(cr.monto_total)}</div>
-            <div style="font-size:11px;color:var(--text-dim);">Otorgado ${cr.fecha_otorgamiento} · ${cr.cantidad_cuotas} cuotas</div>
-          </div>
-          <span class="badge ${cr.estado === 'activo' ? 'pendiente' : 'pagada'}">${cr.estado}</span>
+  const cuotasHtml = credito ? `
+    <div style="margin-bottom:18px;border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+      <div style="background:var(--surface-2);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-weight:700;font-size:13px;">Crédito ${credito.id}</div>
+          <div style="font-size:11px;color:var(--text-dim);">Otorgado ${credito.fecha_otorgamiento} · ${credito.cantidad_cuotas} cuotas</div>
         </div>
-        <div style="padding:4px 14px;">${filasCuotas}</div>
-      </div>`;
-  }).join('') : '<div class="empty-state">Este cliente no tiene créditos registrados.</div>';
+        <span class="badge ${credito.estado === 'activo' ? 'pendiente' : 'pagada'}">${credito.estado}</span>
+      </div>
+      <div style="padding:10px 14px;display:flex;gap:20px;flex-wrap:wrap;">
+        <div class="wb-stat"><span>Pagadas</span><b class="mono" style="color:var(--ok);">${credito.cuotas_pagadas}</b></div>
+        <div class="wb-stat"><span>Vencidas</span><b class="mono" style="color:var(--danger);">${credito.cuotas_vencidas}</b></div>
+        <div class="wb-stat"><span>Pendientes</span><b class="mono">${credito.cuotas_pendientes}</b></div>
+        ${credito.fecha_vencida_mas_antigua ? `<div class="wb-stat"><span>Vence más antigua</span><b class="mono">${credito.fecha_vencida_mas_antigua}</b></div>` : ''}
+      </div>
+    </div>` : '<div class="empty-state">Este cliente no tiene créditos registrados.</div>';
   ['panel-cuotas','wbPanelCuotas'].forEach(id => document.getElementById(id).innerHTML = cuotasHtml);
 
   // Historial: timeline con ícono por tipo de interacción
@@ -2163,22 +2199,6 @@ document.getElementById('btnToggleCuotas').addEventListener('click', () => {
   wrap.style.display = showing ? 'none' : 'block';
   btn.textContent = showing ? '🧾 Ver cuotas y créditos' : '🧾 Ocultar cuotas y créditos';
 });
-
-async function marcarPagada(idCuota){
-  const resp = await apiPost('marcarPagada', { idCuota });
-  if(resp.ok){
-    showToast('Cuota marcada como pagada');
-    abrirCliente(clienteActivoId);
-    if(session && session.rol === 'admin'){
-      if(vendedorActivo) verCarteraVendedor(vendedorActivo.usuario);
-      cargarAdminResumen();
-    } else {
-      cargarClientes().then(cargarDashboard);
-    }
-  } else {
-    showToast('No se pudo actualizar la cuota');
-  }
-}
 
 document.getElementById('btnCloseModal').addEventListener('click', () => {
   document.getElementById('clientModal').classList.remove('open');
